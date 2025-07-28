@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | CTMatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container, .account-settings-card { /* Renamed account-settings-container to card */
+            background: white;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        form {
+            text-align: left;
+        }
+        form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+        form textarea,
+        form input[type="text"],
+        form input[type="password"],
+        form input[type="email"], /* Added for email update form */
+        form input[type="number"],
+        form select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+            transition: background-color 0.3s ease;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .logout-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+        .field-group {
+            margin-bottom: 1rem;
+        }
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        .messages li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .messages .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .messages .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .messages .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* --- NEW CSS for Collapsible Section --- */
+        .collapsible-header {
+            background-color: #f0f0f0; /* Light gray background */
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0; /* Remove default margin from h2 */
+            transition: background-color 0.3s ease;
+        }
+        .collapsible-header:hover {
+            background-color: #e0e0e0;
+        }
+        .collapsible-header .arrow {
+            transition: transform 0.3s ease;
+        }
+        .collapsible-header.collapsed .arrow {
+            transform: rotate(-90deg); /* Arrow points down when collapsed */
+        }
+        .collapsible-header.expanded .arrow {
+            transform: rotate(0deg); /* Arrow points right when expanded */
+        }
+        .collapsible-content {
+            max-height: 0; /* Initially hidden */
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out; /* Smooth transition */
+            padding: 0 2.5rem; /* Match container padding, but will be zeroed when max-height is 0 */
+        }
+        .collapsible-content.expanded {
+            max-height: 500px; /* Needs to be larger than content */
+            padding-bottom: 2.5rem; /* Add padding when expanded */
+        }
+        /* Adjust for no top padding when expanded, it's included in the header */
+        .account-settings-card .collapsible-content.expanded {
+            padding-top: 0;
+        }
+        /* Ensure the form fields have proper margins within the content */
+        .collapsible-content .field-group {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .collapsible-content .submit-btn {
+            margin-top: 0.5rem; /* Adjust button margin within content */
+        }
+        /* Adjust card padding to remove internal white space that will be outside content */
+        .account-settings-card {
+            padding: 0; /* Remove default padding, content will handle it */
+        }
+        /* Add border to the content when expanded */
+        .collapsible-content {
+            border-top: none; /* No top border, header has its own background */
+        }
+        /* --- END NEW CSS for Collapsible Section --- */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Find Clinical Trials</h2>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    {% if "error" in message.tags or "success" in message.tags or "info" in message.tags %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p>Please describe the patient's condition or symptoms:</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="field-group">
+                <label for="patient_description">Patient Description:</label>
+                <textarea id="patient_description" name="patient_description" required placeholder="e.g., '58-year-old male with type 2 diabetes, fatigue, blurred vision.'"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Find Trials</button>
+        </form>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+
+    <div class="account-settings-card">
+        <div class="collapsible-header collapsed" id="accountSettingsHeader">
+            <span>Need to change email address?</span>
+            <span class="arrow">&#9658;</span> </div>
+        <div class="collapsible-content" id="accountSettingsContent">
+            <h2>Account Settings</h2>
+            <p>Update your email address:</p>
+            <form method="post" action="{% url 'update_email' %}">
+                {% csrf_token %}
+                <div class="field-group">
+                    <label for="new_email">New Email:</label>
+                    <input type="email" id="new_email" name="new_email" value="{{ request.user.email }}" required>
+                </div>
+                <div class="field-group">
+                    <label for="current_password">Current Password (for verification):</label>
+                    <input type="password" id="current_password" name="current_password" required>
+                </div>
+                <button type="submit" class="submit-btn" style="background-color: #ffc107; color: black;">Update Email</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- NEW JavaScript for Collapsible Section ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.getElementById('accountSettingsHeader');
+            const content = document.getElementById('accountSettingsContent');
+
+            header.addEventListener('click', function() {
+                const isCollapsed = header.classList.contains('collapsed');
+
+                if (isCollapsed) {
+                    header.classList.remove('collapsed');
+                    header.classList.add('expanded');
+                    content.classList.remove('collapsed');
+                    content.classList.add('expanded');
+                } else {
+                    header.classList.remove('expanded');
+                    header.classList.add('collapsed');
+                    content.classList.remove('expanded');
+                    content.classList.add('collapsed');
+                }
+            });
+            // --- END NEW JavaScript ---
+        });
+    </script>
+</body>
+</html>

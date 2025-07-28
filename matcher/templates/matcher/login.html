@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - CTMatch</title>
+<style>
+    /* Universal box-sizing for consistent dimensions */
+    html {
+        box-sizing: border-box;
+        height: 100%; /* Ensure HTML element takes full height */
+        width: 100%; /* Ensure HTML element takes full width */
+    }
+    *, *::before, *::after {
+        box-sizing: inherit;
+    }
+
+     body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #1a1a2e; /* Dark background for the whole page */
+        color: #e0e0e0; /* Light text for contrast */
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center;   /* Center vertically */
+        min-height: 100vh;     /* Minimum height to be full viewport height */
+        height: 100%;          /* Crucial: Make body take 100% of html's height */
+        width: 100%;           /* Use 100% instead of 100vw to avoid scrollbar issues */
+        margin: 0;             /* Remove default body margin */
+        padding: 0;            /* Remove default body padding */
+        /* REMOVED: overflow: hidden; -> This was preventing scrollbars */
+        overflow-y: auto; /* NEW: Allow vertical scrolling on body if content overflows */
+        overflow-x: hidden; /* NEW: Prevent horizontal scrolling (unless min-width forces it) */
+    }
+
+    .main-container {
+         display: flex;
+        width: 80vw;
+        max-width: 1200px;
+        /* CHANGED: height to min-height, removed max-height for better content fit, or adjusted */
+        min-height: 80vh; /* Ensure a minimum height for the layout */
+        max-height: 95vh; /* NEW: Cap max height to ensure some body background is always visible */
+        /* REMOVED: height: 80vh; */
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .left-half {
+        flex: 1;
+        background: linear-gradient(135deg, #2a0a55, #4a00e0);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        text-align: center;
+    }
+
+    .project-name {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+    }
+
+    .project-description {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        max-width: 400px;
+        opacity: 0.9;
+    }
+
+    .right-half {
+        flex: 1;
+        background-color: #2e2e4a;
+        display: flex;
+        flex-direction: column; /* Changed to column to stack elements vertically */
+        justify-content: center; /* Vertically center content */
+        align-items: center;     /* Horizontally center content */
+        padding: 40px;
+        box-sizing: border-box;
+    }
+
+    .login-container {
+        /* Removed background, border-radius, box-shadow to blend */
+        padding: 0; /* No padding on this container itself */
+        width: 100%;
+        max-width: 350px; /* Max width for the form elements */
+        color: #e0e0e0;
+        display: flex; /* Use flexbox for vertical stacking of form elements */
+        flex-direction: column;
+        align-items: center; /* Center form elements like button */
+    }
+    .login-container h2 {
+        text-align: center;
+        margin-bottom: 1rem; /* Increased margin to push it down from top */
+        margin-top: 1rem; /* Ensure no default top margin */
+        color: #f0f0f0;
+    }
+    input[type="text"],
+    input[type="password"] {
+        width: 100%; /* Make them truly 100% of parent login-container's width (max-width 350px) */
+        padding: 12px;
+        margin-top: 10px; /* Space between inputs */
+        margin-bottom: 10px; /* Space between inputs */
+        border: 1px solid #5a5a8a;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 1rem;
+        background-color: #4a4a70;
+        color: #f0f0f0;
+        /* Inputs are now within a flex column in login-container, so they'll align naturally */
+    }
+    input[type="text"]::placeholder,
+    input[type="password"]::placeholder {
+        color: #b0b0d0;
+        opacity: 0.8;
+    }
+    .login-form-button { /* NEW CLASS for the login button */
+        width: 70%; /* Made smaller (70% of max-width 350px) */
+        padding: 12px;
+        background: #6a1b9a;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        margin-top: 2rem; /* Increased margin to push it down from inputs */
+        transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+        font-weight: bold;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .login-form-button:hover {
+        background-color: #7b1fa2;
+        transform: scale(0.98); /* Zooms out slightly */
+    }
+    .links {
+        text-align: center;
+        margin-top: 3rem; /* Pushed down significantly to center with login button */
+        font-size: 0.95rem;
+        display: flex; /* Use flexbox for links to center them and add gap */
+        gap: 15px; /* Space between links */
+    }
+    .links a {
+        color: #bb86fc;
+        text-decoration: none;
+        transition: color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+        display: inline-block; /* Essential for transform to work on inline elements */
+    }
+    .links a:hover {
+        color: #e0b0ff;
+        text-decoration: underline;
+        transform: scale(0.98); /* Zooms out slightly */
+    }
+    /* Styles for Django messages (adjusted for dark theme) */
+    .messages {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 1.5rem;
+        text-align: center; /* Centered messages */
+    }
+    .messages li {
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+    .messages .success {
+        background-color: #28a745;
+        color: white;
+        border: 1px solid #218838;
+    }
+    .messages .error {
+        background-color: #dc3545;
+        color: white;
+        border: 1px solid #c82333;
+    }
+    .messages .info {
+        background-color: #17a2b8;
+        color: white;
+        border: 1px solid #138496;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .main-container {
+            flex-direction: column;
+            width: 95vw;
+            height: auto;
+            min-height: auto;
+            padding: 0;
+        }
+        .left-half, .right-half {
+            padding: 30px;
+            min-height: 250px;
+        }
+        .project-name {
+            font-size: 2.5rem;
+        }
+        .project-description {
+            font-size: 1rem;
+        }
+    }
+</style>
+</head>
+<body>
+  <div class="main-container">
+    <div class="left-half">
+        <div class="project-name">CTMatch Web</div>
+        <div class="project-description">
+            Your intelligent assistant for clinical trial matching.
+            Upload patient descriptions, classify conditions, and find
+            relevant trials from our comprehensive database.
+        </div>
+    </div>
+    <div class="right-half">
+        <div class="login-container">
+        <h2>Login</h2>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+        <form method="POST" action = "{% url 'login' %}">
+          {% csrf_token %}
+          <input type="text" name="username" placeholder="Username" required>
+          <input type="password" name="password" placeholder="Password" required>
+          <button type="submit" class="login-form-button">Log In</button>
+        </form>
+        <div class="links">
+          <a href="{% url 'register' %}">Register</a> | 
+          <a href="{% url 'forgot_password' %}">Forgot Password?</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
