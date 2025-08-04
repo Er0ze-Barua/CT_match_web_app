@@ -14,18 +14,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# In ctmatch_web/urls.py
 
 from django.contrib import admin
-from django.urls import path, include # Make sure include is imported
-from django.contrib.auth import views as auth_views # <--- NEW IMPORT
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('matcher.urls')), # Your existing matcher app URLs
+    path('', include('matcher.urls')),
 
-    # --- NEW: Django Password Reset URLs ---
-    # These map to Django's built-in views and handle the entire flow
+   
     path('password_reset/',
          auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'),
          name='password_reset'),
@@ -34,12 +32,11 @@ urlpatterns = [
          auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'),
          name='password_reset_done'),
 
-    path('reset/<uidb64>/<token>/', # The unique reset link
+    path('reset/<uidb64>/<token>/',
          auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),
          name='password_reset_confirm'),
 
     path('reset/done/',
          auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
          name='password_reset_complete'),
-    # --- END NEW PASSWORD RESET URLs ---
 ]

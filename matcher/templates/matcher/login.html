@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <title>Login - CTMatch</title>
 <style>
-    /* Universal box-sizing for consistent dimensions */
+    
     html {
         box-sizing: border-box;
-        height: 100%; /* Ensure HTML element takes full height */
-        width: 100%; /* Ensure HTML element takes full width */
+        height: 100%;
+        width: 100%;
     }
     *, *::before, *::after {
         box-sizing: inherit;
@@ -16,29 +16,29 @@
 
      body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #1a1a2e; /* Dark background for the whole page */
-        color: #e0e0e0; /* Light text for contrast */
+        background-color: #1a1a2e;
+        color: #e0e0e0;
         display: flex;
-        justify-content: center; /* Center horizontally */
-        align-items: center;   /* Center vertically */
-        min-height: 100vh;     /* Minimum height to be full viewport height */
-        height: 100%;          /* Crucial: Make body take 100% of html's height */
-        width: 100%;           /* Use 100% instead of 100vw to avoid scrollbar issues */
-        margin: 0;             /* Remove default body margin */
-        padding: 0;            /* Remove default body padding */
-        /* REMOVED: overflow: hidden; -> This was preventing scrollbars */
-        overflow-y: auto; /* NEW: Allow vertical scrolling on body if content overflows */
-        overflow-x: hidden; /* NEW: Prevent horizontal scrolling (unless min-width forces it) */
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .main-container {
          display: flex;
         width: 80vw;
         max-width: 1200px;
-        /* CHANGED: height to min-height, removed max-height for better content fit, or adjusted */
-        min-height: 80vh; /* Ensure a minimum height for the layout */
-        max-height: 95vh; /* NEW: Cap max height to ensure some body background is always visible */
-        /* REMOVED: height: 80vh; */
+        
+        min-height: 80vh;
+        max-height: 95vh;
+        
         border-radius: 15px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
@@ -74,42 +74,42 @@
         flex: 1;
         background-color: #2e2e4a;
         display: flex;
-        flex-direction: column; /* Changed to column to stack elements vertically */
-        justify-content: center; /* Vertically center content */
-        align-items: center;     /* Horizontally center content */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         padding: 40px;
         box-sizing: border-box;
     }
 
     .login-container {
-        /* Removed background, border-radius, box-shadow to blend */
-        padding: 0; /* No padding on this container itself */
+        
+        padding: 0;
         width: 100%;
-        max-width: 350px; /* Max width for the form elements */
+        max-width: 350px;
         color: #e0e0e0;
-        display: flex; /* Use flexbox for vertical stacking of form elements */
+        display: flex;
         flex-direction: column;
-        align-items: center; /* Center form elements like button */
+        align-items: center;
     }
     .login-container h2 {
         text-align: center;
-        margin-bottom: 1rem; /* Increased margin to push it down from top */
-        margin-top: 1rem; /* Ensure no default top margin */
+        margin-bottom: 1rem;
+        margin-top: 1rem;
         color: #f0f0f0;
     }
     input[type="text"],
     input[type="password"] {
-        width: 100%; /* Make them truly 100% of parent login-container's width (max-width 350px) */
+        width: 100%;
         padding: 12px;
-        margin-top: 10px; /* Space between inputs */
-        margin-bottom: 10px; /* Space between inputs */
+        margin-top: 10px;
+        margin-bottom: 10px;
         border: 1px solid #5a5a8a;
         border-radius: 5px;
         box-sizing: border-box;
         font-size: 1rem;
         background-color: #4a4a70;
         color: #f0f0f0;
-        /* Inputs are now within a flex column in login-container, so they'll align naturally */
+        
     }
     input[type="text"]::placeholder,
     input[type="password"]::placeholder {
@@ -117,7 +117,7 @@
         opacity: 0.8;
     }
     .login-form-button { /* NEW CLASS for the login button */
-        width: 70%; /* Made smaller (70% of max-width 350px) */
+        width: 70%;
         padding: 12px;
         background: #6a1b9a;
         color: white;
@@ -125,8 +125,8 @@
         border-radius: 5px;
         cursor: pointer;
         font-size: 1.1rem;
-        margin-top: 2rem; /* Increased margin to push it down from inputs */
-        transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+        margin-top: 2rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
         font-weight: bold;
         text-align: center;
         margin-left: auto;
@@ -140,26 +140,26 @@
         text-align: center;
         margin-top: 3rem; /* Pushed down significantly to center with login button */
         font-size: 0.95rem;
-        display: flex; /* Use flexbox for links to center them and add gap */
-        gap: 15px; /* Space between links */
+        display: flex;
+        gap: 15px;
     }
     .links a {
         color: #bb86fc;
         text-decoration: none;
-        transition: color 0.3s ease, transform 0.2s ease; /* Added transform transition */
-        display: inline-block; /* Essential for transform to work on inline elements */
+        transition: color 0.3s ease, transform 0.2s ease;
+        display: inline-block;
     }
     .links a:hover {
         color: #e0b0ff;
         text-decoration: underline;
         transform: scale(0.98); /* Zooms out slightly */
     }
-    /* Styles for Django messages (adjusted for dark theme) */
+    
     .messages {
         list-style: none;
         padding: 0;
         margin-bottom: 1.5rem;
-        text-align: center; /* Centered messages */
+        text-align: center;
     }
     .messages li {
         padding: 12px;
@@ -183,7 +183,7 @@
         color: white;
         border: 1px solid #138496;
     }
-    /* Responsive adjustments */
+    
     @media (max-width: 768px) {
         .main-container {
             flex-direction: column;

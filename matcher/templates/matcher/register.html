@@ -5,125 +5,270 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | CTMatch</title>
     <style>
+        
+        html {
+            box-sizing: border-box;
+            height: 100%;
+            width: 100%;
+        }
+        *, *::before, *::after {
+            box-sizing: inherit;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #320742;
+            color: #F0F0F0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
-        .register-container {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            max-width: 400px;
+
+        .project-name-container {
+            text-align: center;
+            margin-bottom: 2rem;
+            margin-top: 1rem;
+        }
+
+        .project-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 2px;
+            color: #F0F0F0;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            margin: 10px 0 0;
+            opacity: 0.8;
+            color: #E0E0E0;
+        }
+
+        .main-container {
+            background: linear-gradient(135deg, #2a0a55, #4a00e0);
+            padding: 3rem 4rem;
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            max-width: 450px;
             width: 100%;
             text-align: center;
         }
-        h2 {
-            color: #333;
-            margin-bottom: 1.5rem;
-        }
-        form {
+
+        .register-form {
             text-align: left;
         }
-        form p {
-            margin-bottom: 1rem;
+        
+        .register-form h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #F0F0F0;
+            margin-top: 0;
+            text-align: center;
         }
-        form label {
+        
+        /* Styling for form fields rendered by Django */
+        .register-form p {
+            width: 100%;
+            margin: 0 0 1.5rem;
+            text-align: left;
+        }
+        .register-form p label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: bold;
-            color: #555;
+            color: #F0F0F0;
         }
-        form input[type="text"],
-        form input[type="password"],
-        form input[type="email"] {
-            width: calc(100% - 20px); /* Adjust for padding */
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box; /* Include padding in width */
-        }
-        .form-error {
-            color: red;
-            font-size: 0.85rem;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            text-align: left;
-        }
-        .submit-btn {
+        .register-form p input {
             width: 100%;
             padding: 12px;
-            background-color: #28a745; /* Green for success */
+            border: 1px solid #5a5a8a;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: #3c3c62;
+            color: #F0F0F0;
+            margin-bottom: 5px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .register-form p input:focus {
+            outline: none;
+            border-color: #bb86fc;
+            box-shadow: 0 0 5px rgba(187, 134, 252, 0.6);
+        }
+        
+        .password-rules {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 1rem;
+            font-size: 0.85rem;
+            color: #aaa;
+            text-align: left;
+        }
+        .password-rules li {
+            transition: color 0.3s ease;
+        }
+        .password-rules li.met {
+            color: #2ecc71;
+        }
+        .password-rules li.unmet {
+            color: #e74c3c;
+        }
+        
+        .register-form-button {
+            width: 70%;
+            padding: 12px;
+            background: #a927f5;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
-            margin-top: 1.5rem;
-            transition: background-color 0.3s ease;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: bold;
+            display: block;
+            margin: 2rem auto 0;
         }
-        .submit-btn:hover {
-            background-color: #218838;
+        .register-form-button:hover {
+            background-color: #65079c;
+            transform: scale(0.98);
         }
+        
         .links {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.95rem;
         }
         .links a {
-            color: #007bff;
+            color: #F0F0F0;
             text-decoration: none;
+            transition: color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
         }
         .links a:hover {
+            color: #A370BC;
             text-decoration: underline;
+            transform: scale(0.98);
         }
-        .messages {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 1rem;
-        }
-        .messages li {
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .messages .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .messages .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+
+        
+        .messages { list-style: none; padding: 0; margin-bottom: 1.5rem; text-align: left; }
+        .messages li { padding: 12px; margin-bottom: 10px; border-radius: 5px; font-weight: bold; font-size: 0.9rem; }
+        .messages .success { background-color: #2ecc71; color: #1a1120; border: 1px solid #27ae60; }
+        .messages .error { background-color: #e74c3c; color: white; border: 1px solid #c0392b; }
+        .messages .info { background-color: #3498db; color: white; border: 1px solid #2980b9; }
+        .errorlist { list-style: none; padding: 0; margin: -0.5rem 0 1rem; }
+        .errorlist li { color: #e74c3c; font-size: 0.85rem; font-weight: normal; }
+        
+        @media (max-width: 550px) {
+            .main-container {
+                padding: 2rem 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="register-container">
-        <h2>Register</h2>
+    <div class="project-name-container">
+        <h1 class="project-name">CTMatch Webapp</h1>
+        <p class="tagline">Create an account to find clinical trials that are right for you.</p>
+    </div>
 
+    <div class="main-container">
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    <li class="{{ message.tags }}">{{ message }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
 
-        <form method="post">
-            {% csrf_token %} {{ form.as_p }} <button type="submit" class="submit-btn">Register</button>
+        <form method="post" class="register-form">
+            <h2>Register</h2>
+            {% csrf_token %}
+
+            {% for field in form %}
+                <p>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        {{ field.errors }}
+                    {% endif %}
+
+                    {% if field.auto_id == 'id_password1' %}
+                        <ul class="password-rules">
+                            <li id="rule-min-length">At least 8 characters</li>
+                            <li id="rule-alpha">Contains at least one letter</li>
+                            <li id="rule-numeric">Contains at least one number</li>
+                            <li id="rule-special">Contains at least one special character (!@#$%^&*)</li>
+                        </ul>
+                    {% elif field.auto_id == 'id_password2' %}
+                         <ul class="password-rules">
+                            <li id="rule-match">Passwords must match</li>
+                        </ul>
+                    {% endif %}
+                </p>
+            {% endfor %}
+            
+            <button type="submit" class="register-form-button">Register</button>
         </form>
 
         <div class="links">
             Already have an account? <a href="{% url 'login' %}">Log In</a>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const passwordInput = document.getElementById('id_password1');
+            const password2Input = document.getElementById('id_password2');
+
+            const minLengthRule = document.getElementById('rule-min-length');
+            const alphaRule = document.getElementById('rule-alpha');
+            const numericRule = document.getElementById('rule-numeric');
+            const specialRule = document.getElementById('rule-special');
+            const matchRule = document.getElementById('rule-match');
+
+            function updateRules() {
+                if (!passwordInput || !password2Input) return;
+
+                const password = passwordInput.value;
+                const password2 = password2Input.value;
+                
+                const setRuleStatus = (element, condition) => {
+                    if (element) {
+                        element.classList.toggle('met', condition);
+                        // Only show 'unmet' red style if user has started typing
+                        element.classList.toggle('unmet', !condition && password.length > 0);
+                    }
+                };
+                
+                setRuleStatus(minLengthRule, password.length >= 8);
+                setRuleStatus(alphaRule, /[a-zA-Z]/.test(password));
+                setRuleStatus(numericRule, /\d/.test(password));
+                setRuleStatus(specialRule, /[!@#$%^&*]/.test(password));
+
+                if (matchRule) {
+                    const passwordsMatch = password.length > 0 && password === password2;
+                    matchRule.classList.toggle('met', passwordsMatch);
+                    // Only show 'unmet' red style if user has started typing in confirmation box
+                    matchRule.classList.toggle('unmet', !passwordsMatch && password2.length > 0);
+                }
+            }
+
+            if (passwordInput && password2Input) {
+                passwordInput.addEventListener('input', updateRules);
+                password2Input.addEventListener('input', updateRules);
+                updateRules(); 
+            }
+        });
+    </script>
 </body>
 </html>
